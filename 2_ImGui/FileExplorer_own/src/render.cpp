@@ -76,7 +76,14 @@ void WindowClass::DrawContent()
 
 void WindowClass::DrawActions()
 {
-    ImGui::Text("DrawActions");
+    if (fs::is_directory(selectedEntry))
+    {
+        ImGui::Text("Selected dir: %s", selectedEntry.string().c_str());
+    }
+    else if (fs::is_regular_file(selectedEntry)) 
+    {
+        ImGui::Text("Selected file: %s", selectedEntry.string().c_str());
+    }
 }
 void WindowClass::DrawFilter()
 {
