@@ -47,7 +47,31 @@ void WindowClass::DrawMenu()
 
 void WindowClass::DrawContent()
 {
-    ImGui::Text("DrawContent");
+    for (const auto &entry : fs::directory_iterator(currentPath))
+    {
+        const auto is_selected = entry.path() == selectedEntry;
+        const auto is_directory = entry.is_directory();
+        const auto is_file = entry.is_regular_file();
+        auto entry_name = entry.path().filename().string();
+        if (is_directory)
+        {
+            entry_name = "[D]" + entry_name;
+        }
+        else if (is_file) 
+        {
+            entry_name = "[F]" + entry_name;
+        }
+
+        if (ImGui::Selectable(entry_name.c_str(), is_selected))
+        {
+            if (is_directory) 
+            {
+                currentPath /= entry.path().filename();
+            }
+
+            selectedEntry = entry.path();
+        }
+    }
 }
 
 void WindowClass::DrawActions()
