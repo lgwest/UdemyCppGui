@@ -20,11 +20,11 @@ void WindowClass::Draw(std::string_view label)
     ImGui::Begin(label.data(), nullptr, window_flags);
 
     DrawMenu();
-    ImGui::SameLine();
+    ImGui::Separator();
     DrawContent();
-    ImGui::SameLine();
+    ImGui::Separator();
     DrawActions();
-    ImGui::SameLine();
+    ImGui::Separator();
     DrawFilter();
 
     ImGui::End();
