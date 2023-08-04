@@ -32,7 +32,7 @@ void WindowClass::Draw(std::string_view label)
 
 void WindowClass::DrawMenu()
 {
-    ImGui::Text("DrawMenu");
+    ImGui::Button("Go Up");
 }
 
 void WindowClass::DrawContent()
