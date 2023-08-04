@@ -84,6 +84,10 @@ void WindowClass::DrawActions()
     {
         ImGui::Text("Selected file: %s", selectedEntry.string().c_str());
     }
+    else 
+    {
+        ImGui::Text("Nothing selected");
+    }
 }
 void WindowClass::DrawFilter()
 {
