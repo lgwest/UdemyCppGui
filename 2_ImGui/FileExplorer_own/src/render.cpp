@@ -32,7 +32,17 @@ void WindowClass::Draw(std::string_view label)
 
 void WindowClass::DrawMenu()
 {
-    ImGui::Button("Go Up");
+    if (ImGui::Button("Go Up"))
+    {
+        if (currentPath.has_parent_path())
+        {
+            currentPath = currentPath.parent_path();
+        }
+    }
+
+    ImGui::SameLine();
+
+    ImGui::Text("Current directory: %s", currentPath.string().c_str());
 }
 
 void WindowClass::DrawContent()
