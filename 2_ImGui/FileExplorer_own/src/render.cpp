@@ -80,7 +80,30 @@ void WindowClass::DrawActions()
 }
 void WindowClass::DrawFilter()
 {
-    ImGui::Text("DrawFilter");
+    static char extension_filter[16] = {"\0"};
+    ImGui::Text("Filter by extension");
+    ImGui::SameLine();
+    ImGui::InputText("###inFilter", extension_filter, sizeof(extension_filter));
+
+    if (std::strlen(extension_filter) == 0)
+    {
+        return;
+    }
+
+    auto filtered_file_count = std::size_t{0};
+    for (const auto &entry : fs::directory_iterator(currentPath))
+    {
+        if (!fs::is_regular_file(entry))
+        {
+            continue;
+        }
+
+        if (entry.path().extension().string() == extension_filter)
+        {
+            ++filtered_file_count;
+        }
+    }
+    ImGui::Text("Number of files: %u", filtered_file_count);
 }
 
 void render(WindowClass &window_obj)
