@@ -29,17 +29,21 @@ void WindowClass::Draw(std::string_view label)
 
 void WindowClass::DrawMenu()
 {
+    ImGui::Text("DrawMenu");
 }
 
 void WindowClass::DrawContent()
 {
+    ImGui::Text("DrawContent");
 }
 
 void WindowClass::DrawActions()
 {
+    ImGui::Text("DrawActions");
 }
 void WindowClass::DrawFilter()
 {
+    ImGui::Text("DrawFilter");
 }
 
 void render(WindowClass &window_obj)
