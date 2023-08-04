@@ -19,7 +19,27 @@ void WindowClass::Draw(std::string_view label)
 
     ImGui::Begin(label.data(), nullptr, window_flags);
 
+    DrawMenu();
+    DrawContent();
+    DrawActions();
+    DrawFilter();
+
     ImGui::End();
+}
+
+void WindowClass::DrawMenu()
+{
+}
+
+void WindowClass::DrawContent()
+{
+}
+
+void WindowClass::DrawActions()
+{
+}
+void WindowClass::DrawFilter()
+{
 }
 
 void render(WindowClass &window_obj)
