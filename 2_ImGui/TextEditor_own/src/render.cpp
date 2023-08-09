@@ -1,8 +1,14 @@
+#include <algorithm>
+#include <cstring>
+#include <fstream>
 #include <iostream>
-
+#include <string>
+#include <string_view>
+#include <filesystem>
 #include <fmt/format.h>
 #include <imgui.h>
 #include <implot.h>
+#include <sstream>
 
 #include "render.hpp"
 
@@ -114,31 +120,60 @@ void WindowClass::DrawLoadPopup()
 void WindowClass::DrawContent()
 {
     static constexpr auto inputTextSize = ImVec2(1200.0F, 625.0F);
-    static constexpr auto inputTextFlags = 
-        ImGuiInputTextFlags_AllowTabInput
+    static constexpr auto lineNumberSize = ImVec2(30.0F, 625.0F);
+    static constexpr auto inputTextFlags =  ImGuiInputTextFlags_AllowTabInput
         | ImGuiInputTextFlags_NoHorizontalScroll;
 
+    ImGui::BeginChild("LineNumber", lineNumberSize);
+
+    const auto line_count = std::count(textBuffer, textBuffer + bufferSize, '\n') + 1;
+    for (auto i = 1; i <= line_count; ++i)
+    {
+        ImGui::Text("%d", i);
+    }
+    ImGui::EndChild();
+    ImGui::SameLine();
     ImGui::InputTextMultiline("###inputfield", textBuffer, bufferSize, inputTextSize, inputTextFlags);
 }
 
 void WindowClass::DrawInfo()
 {
+    if (currentFilename.size() == 0)
+    {
+        ImGui::Text("No File Opened!");
+        return;
+    }
 
+    const auto file_extension = GetFileExtension(currentFilename);
+    ImGui::Text("Opened File %s | File Extension %s", currentFilename.data(), file_extension.data());
 }
 
 void WindowClass::SaveToFile(std::string_view filename)
 {
-
+    auto out = std::ofstream{filename.data()};
+    if (out.is_open())
+    {
+        out << textBuffer;
+        out.close();
+    }
 }
 
 void WindowClass::LoadFromFile(std::string_view filename)
 {
-
+    auto in = std::ifstream{filename.data()};
+    if (in.is_open())
+    {
+        auto buffer = std::stringstream{};
+        buffer << in.rdbuf();
+        std::memcpy(textBuffer, buffer.str().data(), bufferSize);
+        in.close();
+    }
 }
 
 std::string WindowClass::GetFileExtension(std::string_view filename)
 {
-    return "";
+    const auto file_path = fs::path{filename};
+    return file_path.extension().string();
 }
 
 void render(WindowClass &window_obj)

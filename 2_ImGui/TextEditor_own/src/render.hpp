@@ -3,7 +3,9 @@
 #include <cstdint>
 #include <string_view>
 #include <imgui.h>
+#include <filesystem>
 
+namespace fs = std::filesystem;
 class WindowClass
 {
 public:
