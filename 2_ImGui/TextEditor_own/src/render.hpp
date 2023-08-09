@@ -2,12 +2,19 @@
 
 #include <cstdint>
 #include <string_view>
+#include <imgui.h>
 
 class WindowClass
 {
 public:
     static constexpr auto bufferSize =  std::size_t{1024};
-
+    static constexpr auto popUpFlags = ImGuiWindowFlags_NoResize 
+                    | ImGuiWindowFlags_NoMove 
+                    | ImGuiWindowFlags_NoCollapse 
+                    | ImGuiWindowFlags_NoScrollbar;
+    static constexpr auto popUpSize = ImVec2(300.0F, 100.0F);
+    static constexpr auto popUpButtonSize = ImVec2(120.0F, 0.0F);
+    
 public:
     WindowClass() : currentFilename({})
     {

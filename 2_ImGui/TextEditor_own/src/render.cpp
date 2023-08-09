@@ -60,17 +60,22 @@ void WindowClass::DrawSavePopup()
     static char saveFilenameBuffer[256] = "text.txt";
     const auto esc_pressed = ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Escape));
 
-    if (ImGui::BeginPopupModal("Save File"))
+    ImGui::SetNextWindowSize(popUpSize);
+    ImGui::SetNextWindowPos(
+        ImVec2(ImGui::GetIO().DisplaySize.x / 2.0F - popUpSize.x / 2.0F,
+                ImGui::GetIO().DisplaySize.y / 2.0F - popUpSize.x / 2.0F)
+    );
+    if (ImGui::BeginPopupModal("Save File", nullptr, popUpFlags))
     {
         ImGui::InputText("Filename", saveFilenameBuffer, sizeof(saveFilenameBuffer));
-        if (ImGui::Button("Save")) {
+        if (ImGui::Button("Save", popUpButtonSize)) {
             SaveToFile(saveFilenameBuffer);
             currentFilename = saveFilenameBuffer;
             ImGui::CloseCurrentPopup();
         }
         ImGui::SameLine();
 
-        if (ImGui::Button("Cancel") || esc_pressed) {
+        if (ImGui::Button("Cancel", popUpButtonSize) || esc_pressed) {
             ImGui::CloseCurrentPopup();
         }
 
@@ -83,18 +88,22 @@ void WindowClass::DrawLoadPopup()
     static char loadFilenameBuffer[256] = "text.txt";
     const auto esc_pressed = ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Escape));
 
-    if (ImGui::BeginPopupModal("Load File"))
+    ImGui::SetNextWindowSize(popUpSize);
+    ImGui::SetNextWindowPos(
+        ImVec2(ImGui::GetIO().DisplaySize.x / 2.0F - popUpSize.x / 2.0F,
+                ImGui::GetIO().DisplaySize.y / 2.0F - popUpSize.x / 2.0F)
+    );
+    if (ImGui::BeginPopupModal("Load File", nullptr, popUpFlags))
     {
-
         ImGui::InputText("Filename", loadFilenameBuffer, sizeof(loadFilenameBuffer));
-        if (ImGui::Button("Load")) {
+        if (ImGui::Button("Load", popUpButtonSize)) {
             LoadFromFile(loadFilenameBuffer);
             currentFilename = loadFilenameBuffer;
             ImGui::CloseCurrentPopup();
         }
         ImGui::SameLine();
 
-        if (ImGui::Button("Cancel") || esc_pressed) {
+        if (ImGui::Button("Cancel", popUpButtonSize) || esc_pressed) {
             ImGui::CloseCurrentPopup();
         }
 
