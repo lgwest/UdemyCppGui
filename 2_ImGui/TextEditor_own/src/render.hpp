@@ -14,7 +14,9 @@ public:
                     | ImGuiWindowFlags_NoScrollbar;
     static constexpr auto popUpSize = ImVec2(300.0F, 100.0F);
     static constexpr auto popUpButtonSize = ImVec2(120.0F, 0.0F);
-    
+    static constexpr auto popUpPos = ImVec2(1280.0F / 2.0F - popUpSize.x / 2.0F,
+                                            720.0F / 2.0F - popUpSize.y / 2.0F);
+
 public:
     WindowClass() : currentFilename({})
     {

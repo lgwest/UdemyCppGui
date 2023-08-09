@@ -61,9 +61,9 @@ void WindowClass::DrawSavePopup()
     const auto esc_pressed = ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Escape));
 
     ImGui::SetNextWindowSize(popUpSize);
-    ImGui::SetNextWindowPos(
-        ImVec2(ImGui::GetIO().DisplaySize.x / 2.0F - popUpSize.x / 2.0F,
-                ImGui::GetIO().DisplaySize.y / 2.0F - popUpSize.x / 2.0F)
+    ImGui::SetNextWindowPos(popUpPos
+        // ImVec2(ImGui::GetIO().DisplaySize.x / 2.0F - popUpSize.x / 2.0F,
+        //         ImGui::GetIO().DisplaySize.y / 2.0F - popUpSize.x / 2.0F)
     );
     if (ImGui::BeginPopupModal("Save File", nullptr, popUpFlags))
     {
@@ -89,9 +89,9 @@ void WindowClass::DrawLoadPopup()
     const auto esc_pressed = ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Escape));
 
     ImGui::SetNextWindowSize(popUpSize);
-    ImGui::SetNextWindowPos(
-        ImVec2(ImGui::GetIO().DisplaySize.x / 2.0F - popUpSize.x / 2.0F,
-                ImGui::GetIO().DisplaySize.y / 2.0F - popUpSize.x / 2.0F)
+    ImGui::SetNextWindowPos( popUpPos
+        // ImVec2(ImGui::GetIO().DisplaySize.x / 2.0F - popUpSize.x / 2.0F,
+        //         ImGui::GetIO().DisplaySize.y / 2.0F - popUpSize.x / 2.0F)
     );
     if (ImGui::BeginPopupModal("Load File", nullptr, popUpFlags))
     {
@@ -113,7 +113,12 @@ void WindowClass::DrawLoadPopup()
 
 void WindowClass::DrawContent()
 {
+    static constexpr auto inputTextSize = ImVec2(1200.0F, 625.0F);
+    static constexpr auto inputTextFlags = 
+        ImGuiInputTextFlags_AllowTabInput
+        | ImGuiInputTextFlags_NoHorizontalScroll;
 
+    ImGui::InputTextMultiline("###inputfield", textBuffer, bufferSize, inputTextSize, inputTextFlags);
 }
 
 void WindowClass::DrawInfo()
