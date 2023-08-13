@@ -2,6 +2,7 @@
 
 #include <fmt/format.h>
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include <implot.h>
 
 #include "render.hpp"
@@ -19,8 +20,51 @@ void WindowClass::Draw(std::string_view label)
 
     ImGui::Begin(label.data(), nullptr, window_flags);
 
+    DrawSelection();
+    DrawDiffView();
+    DrawStats();
+
     ImGui::End();
 }
+
+void WindowClass::DrawSelection()
+{
+    ImGui::InputText("Left", &filePath1);
+    ImGui::SameLine();
+    if (ImGui::Button("Save###Left"))
+    {
+        SaveFileContent(filePath1, fileContent1);
+    }
+
+    ImGui::InputText("Right", &filePath2);
+    ImGui::SameLine();
+    if (ImGui::Button("Save###Right"))
+    {
+        SaveFileContent(filePath2, fileContent2);
+    }
+}
+
+void WindowClass::DrawDiffView()
+{
+}
+
+void WindowClass::DrawStats()
+{
+}
+
+WindowClass::FileContent WindowClass::LoadFileContent(std::string_view file_path)
+{
+    return FileContent();
+}
+
+void WindowClass::SaveFileContent(std::string_view file_path, FileContent file_content)
+{
+}
+
+void WindowClass::CreateDiff()
+{
+}
+
 
 void render(WindowClass &window_obj)
 {
