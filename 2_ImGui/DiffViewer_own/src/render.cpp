@@ -57,6 +57,15 @@ void WindowClass::DrawSelection()
 
 void WindowClass::DrawDiffView()
 {
+    for (std::size_t i = 0; i < fileContent1.size(); ++i)
+    {
+        ImGui::Text("%s", fileContent1[i].data());
+    }
+
+    for (std::size_t i = 0; i < fileContent2.size(); ++i)
+    {
+        ImGui::Text("%s", fileContent2[i].data());
+    }
 }
 
 void WindowClass::DrawStats()
