@@ -75,16 +75,15 @@ void WindowClass::DrawStats()
 WindowClass::FileContent WindowClass::LoadFileContent(std::string_view file_path)
 {
     auto content = FileContent{};
-    auto in = std::ifstream(file_path.data());
+    auto in = std::ifstream{file_path.data()};
 
     if (in.is_open())
     {
         auto line = std::string{};
-        while (std::getline(in, line));
+        while (std::getline(in, line))
         {
             content.push_back(line);
         }
-
         in.close();
     }
 
@@ -97,7 +96,6 @@ void WindowClass::SaveFileContent(std::string_view file_path, FileContent file_c
 
     if (out.is_open())
     {
-        auto line = std::string{};
         for (const auto &line : file_content) 
         {
             out << line << '\n';
