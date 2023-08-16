@@ -57,15 +57,99 @@ void WindowClass::DrawSelection()
 
 void WindowClass::DrawDiffView()
 {
-    for (std::size_t i = 0; i < fileContent1.size(); ++i)
-    {
-        ImGui::Text("%s", fileContent1[i].data());
-    }
+    const auto parent_size = ImVec2(ImGui::GetContentRegionAvail().x, 500.0F);
+    const auto child_size = ImVec2(parent_size.x / 2.0F - 40.0F, parent_size.y);
 
-    for (std::size_t i = 0; i < fileContent2.size(); ++i)
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0F, 0.0F));
+
+    if (ImGui::BeginChild("Parent"), parent_size, true)
     {
-        ImGui::Text("%s", fileContent2[i].data());
+        if (ImGui::BeginChild("Diff1", child_size, false))
+        {
+            for (std::size_t i = 0; i < fileContent1.size(); ++i)
+            {
+                if (!diffResult1[i].empty())
+                {
+                    ImGui::TextColored(ImVec4(1.0F, 0.0F, 0.0F, 1.0F), fileContent1[i].data());
+                }
+                else
+                {
+                    ImGui::Text("%s", fileContent1[i].data());
+                }
+            }
+        }
+        ImGui::EndChild();
+
+        ImGui::SameLine();
+
+        const auto line_height = ImGui::GetTextLineHeightWithSpacing();
+        const auto button_size = ImVec2(15.0F, line_height);
+
+        if (ImGui::BeginChild("Swap"))
+        {
+            for (std::size_t i = 0; i < diffResult1.size(); ++i) 
+            {
+                const auto left_label = fmt::format("<##{}", i);
+                const auto right_label = fmt::format(">##{}", i);
+                if (!diffResult1[i].empty() || !diffResult2[i].empty()) 
+                {
+                    if (ImGui::Button(left_label.data(), button_size))
+                    {
+                        if (fileContent1.size() > i && fileContent2.size() > i)
+                        {
+                            fileContent1[i] = fileContent2[i];
+                        }
+                        else if (fileContent2.size() > i)
+                        {
+                            fileContent1.push_back(fileContent2[i]);
+                        }
+                        CreateDiff();
+                    }
+
+                    ImGui::SameLine();
+
+                    if (ImGui::Button(right_label.data(), button_size))
+                    {
+                        if (fileContent1.size() > i && fileContent2.size() > i)
+                        {
+                            fileContent2[i] = fileContent1[i];
+                        }
+                        else if (fileContent1.size() > i)
+                        {
+                            fileContent2.push_back(fileContent1[i]);
+                        }
+                        CreateDiff();
+                    }                
+                }
+                else
+                {
+                    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + line_height);
+                }
+            }
+        }
+        ImGui::EndChild();
+
+        ImGui::SameLine();
+
+        if (ImGui::BeginChild("Diff2", child_size, false))
+        {
+            for (std::size_t i = 0; i < fileContent2.size(); ++i)
+            {
+                if (!diffResult1[i].empty())
+                {
+                    ImGui::TextColored(ImVec4(1.0F, 0.0F, 0.0F, 1.0F), fileContent2[i].data());
+                }
+                else
+                {
+                    ImGui::Text("%s", fileContent2[i].data());
+                }
+            }
+        }
+        ImGui::EndChild();
     }
+    ImGui::EndChild();
+
+    ImGui::PopStyleVar();
 }
 
 void WindowClass::DrawStats()
