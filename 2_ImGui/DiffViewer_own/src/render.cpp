@@ -159,6 +159,16 @@ void WindowClass::DrawDiffView()
 
 void WindowClass::DrawStats()
 {
+    auto diff_lines_count = std::size_t{0};
+    for (const auto &line : diffResult1)
+    {
+        if( !line.empty()) 
+        {
+            ++diff_lines_count;
+        }
+    }
+    ImGui::SetCursorPosY(ImGui::GetWindowHeight() - 20.0F);
+    ImGui::Text("Diff line count: %u", diff_lines_count);
 }
 
 WindowClass::FileContent WindowClass::LoadFileContent(std::string_view file_path)
