@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <filesystem>
 
 #include <fmt/format.h>
 #include <imgui.h>
@@ -9,6 +10,8 @@
 #include <implot.h>
 
 #include "render.hpp"
+
+namespace fs = std::filesystem;
 
 void WindowClass::Draw(std::string_view label)
 {
@@ -200,8 +203,8 @@ void WindowClass::CreateDiff()
 
     for (std::size_t i = 0; i < max_num_lines; ++i)
     {
-        const auto line1 = i < fileContent1.size() ? fileContent1[1] : "EMPTY";
-        const auto line2 = i < fileContent2.size() ? fileContent2[1] : "EMPTY";
+        const auto line1 = i < fileContent1.size() ? fileContent1[i] : "EMPTY";
+        const auto line2 = i < fileContent2.size() ? fileContent2[i] : "EMPTY";
 
         if (line1 != line2)
         {
@@ -219,5 +222,6 @@ void WindowClass::CreateDiff()
 
 void render(WindowClass &window_obj)
 {
-    window_obj.Draw("DiffViewer[own]");
+    auto title = fmt::format("DiffViewer[own] {}", fs::current_path().string());
+    window_obj.Draw(title.c_str());
 }
