@@ -57,12 +57,14 @@ void WindowClass::DrawSelection()
 
 void WindowClass::DrawDiffView()
 {
+    constexpr static auto swap_width = 40.0F;  
     const auto parent_size = ImVec2(ImGui::GetContentRegionAvail().x, 500.0F);
-    const auto child_size = ImVec2(parent_size.x / 2.0F - 40.0F, parent_size.y);
+    const auto child_size = ImVec2(parent_size.x / 2.0F - swap_width, parent_size.y);
+    const auto swap_size = ImVec2(swap_width, child_size.y);
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0F, 0.0F));
 
-    if (ImGui::BeginChild("Parent"), parent_size, true)
+    if (ImGui::BeginChild("Parent", parent_size, true))
     {
         if (ImGui::BeginChild("Diff1", child_size, false))
         {
@@ -85,7 +87,7 @@ void WindowClass::DrawDiffView()
         const auto line_height = ImGui::GetTextLineHeightWithSpacing();
         const auto button_size = ImVec2(15.0F, line_height);
 
-        if (ImGui::BeginChild("Swap"))
+        if (ImGui::BeginChild("Swap", swap_size, true))
         {
             for (std::size_t i = 0; i < diffResult1.size(); ++i) 
             {
