@@ -117,6 +117,7 @@ void WindowClass::DrawColorButtons()
     const auto selected_green = currentDrawColor == ImColor(0, 255, 0);
     const auto selected_blue = currentDrawColor == ImColor(0, 0, 255);
     const auto selected_white = currentDrawColor == ImColor(255, 255, 255);
+    const auto none_preset_color = !selected_red && !selected_green && !selected_blue && !selected_white;
 
     constexpr static auto orange = ImVec4(1.0F, 0.5F, 0.0F, 1.0F);
 
@@ -173,6 +174,29 @@ void WindowClass::DrawColorButtons()
         currentDrawColor = ImColor(255, 255, 255);
     }
     if (selected_white)
+    {
+        ImGui::PopStyleColor();
+    }
+
+    if (none_preset_color)
+    {
+        ImGui::PushStyleColor(ImGuiCol_Button, orange);
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Choose"))
+    {
+        ImGui::OpenPopup("Color Picker");
+    }
+
+    if (ImGui::BeginPopup("Color Picker"))
+    {
+        ImGui::ColorPicker3("##picker", reinterpret_cast<float *>(&currentDrawColor));
+        ImGui::EndPopup();
+    }
+
+    if (none_preset_color)
     {
         ImGui::PopStyleColor();
     }
