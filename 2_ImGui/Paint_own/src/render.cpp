@@ -114,9 +114,9 @@ void WindowClass::DrawMenu()
 void WindowClass::DrawCanvas()
 {
     canvasPos =ImGui::GetCursorPos();
-    const auto border_thicknes = 1.5F;
-    const auto button_size = ImVec2(canvasSize.x + 2.0F * border_thicknes,
-                                    canvasSize.y + 2.0F * border_thicknes);
+    const auto border_thickness = 1.5F;
+    const auto button_size = ImVec2(canvasSize.x + 2.0F * border_thickness,
+                                    canvasSize.y + 2.0F * border_thickness);
 
     ImGui::InvisibleButton("##canvas", button_size);
 
@@ -125,29 +125,29 @@ void WindowClass::DrawCanvas()
 
     if (is_mouse_hovering && ImGui::IsMouseDown(ImGuiMouseButton_Left))
     {
-        const auto point = ImVec2(mouse_pos.x - canvasPos.x - border_thicknes,
-                                mouse_pos.y - canvasPos.y - border_thicknes);
+        const auto point = ImVec2(mouse_pos.x - canvasPos.x - border_thickness,
+                                mouse_pos.y - canvasPos.y - border_thickness);
         points.push_back(std::make_tuple(point, currentDrawColor, pointDrawSize));
     }
 
     auto *draw_list = ImGui::GetWindowDrawList();
     for (const auto &[point, color, size] : points)
     {
-        const auto pos = ImVec2(canvasPos.x + border_thicknes + point.x,
-                                canvasPos.y + border_thicknes + point.y);
+        const auto pos = ImVec2(canvasPos.x + border_thickness + point.x,
+                                canvasPos.y + border_thickness + point.y);
         draw_list->AddCircleFilled(pos, size, color);
     }
 
     const auto border_min = canvasPos;
     const auto border_max =
-        ImVec2(canvasPos.x + button_size.x - border_thicknes,
-               canvasPos.y + button_size.y - border_thicknes);
+        ImVec2(canvasPos.x + button_size.x - border_thickness,
+               canvasPos.y + button_size.y - border_thickness);
     draw_list->AddRect(border_min,
                        border_max,
                        IM_COL32(255, 255, 255, 255),
                        0.0F,
                        ImDrawCornerFlags_All,
-                       border_thicknes);
+                       border_thickness);
 }
 
 void WindowClass::DrawColorButtons()
