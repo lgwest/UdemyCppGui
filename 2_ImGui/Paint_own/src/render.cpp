@@ -113,13 +113,78 @@ void WindowClass::DrawCanvas()
 
 void WindowClass::DrawColorButtons()
 {
+    const auto selected_red = currentDrawColor == ImColor(255, 0 ,0);
+    const auto selected_green = currentDrawColor == ImColor(0, 255, 0);
+    const auto selected_blue = currentDrawColor == ImColor(0, 0, 255);
+    const auto selected_white = currentDrawColor == ImColor(255, 255, 255);
+
+    constexpr static auto orange = ImVec4(1.0F, 0.5F, 0.0F, 1.0F);
+
+    if (selected_red)
+    {
+        ImGui::PushStyleColor(ImGuiCol_Button, orange);
+    }
+    if (ImGui::Button("Red"))
+    {
+        currentDrawColor = ImColor(255, 0, 0);
+    }
+    if (selected_red)
+    {
+        ImGui::PopStyleColor();
+    }
+
+    if (selected_green)
+    {
+        ImGui::PushStyleColor(ImGuiCol_Button, orange);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Green"))
+    {
+        currentDrawColor = ImColor(0, 255, 0);
+    }
+    if (selected_green)
+    {
+        ImGui::PopStyleColor();
+    }
+
+    ImGui::SameLine();
+
+    if (selected_blue)
+    {
+        ImGui::PushStyleColor(ImGuiCol_Button, orange);
+    }
+    if (ImGui::Button("Blue"))
+    {
+        currentDrawColor = ImColor(0, 0, 255);
+    }
+    if (selected_blue)
+    {
+        ImGui::PopStyleColor();
+    }
+
+    ImGui::SameLine();
+
+    if (selected_white)
+    {
+        ImGui::PushStyleColor(ImGuiCol_Button, orange);
+    }
+    if (ImGui::Button("White"))
+    {
+        currentDrawColor = ImColor(255, 255, 255);
+    }
+    if (selected_white)
+    {
+        ImGui::PopStyleColor();
+    }
 }
 
 void WindowClass::DrawSizeSettings()
 {
     ImGui::Text("Draw Size");
     ImGui::SameLine();
+    ImGui::PushItemWidth(canvasSize.x - ImGui::GetCursorPosX());
     ImGui::SliderFloat("##drawSize", &pointDrawSize, 1.0F, 10.0F);
+    ImGui::PopItemWidth();
 }
 
 void WindowClass::SaveToImageFile(std::string_view filename)
