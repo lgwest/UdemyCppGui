@@ -1,4 +1,8 @@
 #include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+#include <tuple>
 
 #include <fmt/format.h>
 #include <imgui.h>
@@ -109,6 +113,30 @@ void WindowClass::DrawMenu()
 
 void WindowClass::DrawCanvas()
 {
+    canvasPos =ImGui::GetCursorPos();
+    const auto border_thicknes = 1.5F;
+    const auto button_size = ImVec2(canvasSize.x + 2.0F * border_thicknes,
+                                    canvasSize.y + 2.0F * border_thicknes);
+
+    ImGui::InvisibleButton("##canvas", button_size);
+
+    const auto mouse_pos = ImGui::GetMousePos();
+    const auto is_mouse_hovering = ImGui::IsItemHovered();
+
+    if (is_mouse_hovering && ImGui::IsMouseDown(ImGuiMouseButton_Left))
+    {
+        const auto point = ImVec2(mouse_pos.x - canvasPos.x - border_thicknes,
+                                mouse_pos.y - canvasPos.y - border_thicknes);
+        points.push_back(std::make_tuple(point, currentDrawColor, pointDrawSize));
+    }
+
+    auto *draw_list = ImGui::GetWindowDrawList();
+    for (const auto &[point, color, size] : points)
+    {
+        const auto pos = ImVec2(canvasPos.x + border_thicknes + point.x,
+                                canvasPos.y + border_thicknes + point.y);
+        draw_list->AddCircleFilled(pos, size, color);
+    }
 }
 
 void WindowClass::DrawColorButtons()
@@ -221,6 +249,7 @@ void WindowClass::LoadFromImageFile(std::string_view filename)
 
 void WindowClass::ClearCanvas()
 {
+    points.clear();
 }
 
 void render(WindowClass &window_obj)
