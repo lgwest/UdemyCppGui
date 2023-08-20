@@ -30,7 +30,8 @@ private:
     void DrawMenu();
     void DrawCanvas();
     void DrawColorButtons();
-
+    void DrawSizeSettings();
+    
     void SaveToImageFile(std::string_view filename);
     void LoadFromImageFile(std::string_view filename);
     void ClearCanvas();

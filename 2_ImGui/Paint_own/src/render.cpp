@@ -26,7 +26,6 @@ void WindowClass::Draw(std::string_view label)
 }
 void WindowClass::DrawSavePopup()
 {
-    static char saveFilenameBuffer[256] = "text.txt";
     const auto esc_pressed = ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Escape));
 
     ImGui::SetNextWindowSize(popUpSize);
@@ -34,7 +33,7 @@ void WindowClass::DrawSavePopup()
         // ImVec2(ImGui::GetIO().DisplaySize.x / 2.0F - popUpSize.x / 2.0F,
         //         ImGui::GetIO().DisplaySize.y / 2.0F - popUpSize.x / 2.0F)
     );
-    if (ImGui::BeginPopupModal("Save File", nullptr, popUpFlags))
+    if (ImGui::BeginPopupModal("Save Image", nullptr, popUpFlags))
     {
         ImGui::InputText("Filename", filenameBuffer, sizeof(filenameBuffer));
         if (ImGui::Button("Save", popUpButtonSize)) {
@@ -56,11 +55,9 @@ void WindowClass::DrawLoadPopup()
     const auto esc_pressed = ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Escape));
 
     ImGui::SetNextWindowSize(popUpSize);
-    ImGui::SetNextWindowPos( popUpPos
-        // ImVec2(ImGui::GetIO().DisplaySize.x / 2.0F - popUpSize.x / 2.0F,
-        //         ImGui::GetIO().DisplaySize.y / 2.0F - popUpSize.x / 2.0F)
-    );
-    if (ImGui::BeginPopupModal("Load File", nullptr, popUpFlags))
+    ImGui::SetNextWindowPos( popUpPos);
+
+    if (ImGui::BeginPopupModal("Load Image", nullptr, popUpFlags))
     {
         ImGui::InputText("Filename", filenameBuffer, sizeof(filenameBuffer));
         if (ImGui::Button("Load", popUpButtonSize)) {
@@ -86,14 +83,14 @@ void WindowClass::DrawMenu()
     
     if (ImGui::Button("Save") || (ctrl_pressed && s_pressed))
     {
-        ImGui::OpenPopup("Save File");
+        ImGui::OpenPopup("Save Image");
     }
 
     ImGui::SameLine();
 
     if (ImGui::Button("Load")  || (ctrl_pressed && l_pressed))
     {
-        ImGui::OpenPopup("Load File");
+        ImGui::OpenPopup("Load Image");
     }
 
     ImGui::SameLine();
@@ -102,6 +99,9 @@ void WindowClass::DrawMenu()
     {
         ClearCanvas();
     }
+
+    DrawColorButtons();
+    DrawSizeSettings();
 
     DrawSavePopup();
     DrawLoadPopup();
@@ -113,6 +113,13 @@ void WindowClass::DrawCanvas()
 
 void WindowClass::DrawColorButtons()
 {
+}
+
+void WindowClass::DrawSizeSettings()
+{
+    ImGui::Text("Draw Size");
+    ImGui::SameLine();
+    ImGui::SliderFloat("##drawSize", &pointDrawSize, 1.0F, 10.0F);
 }
 
 void WindowClass::SaveToImageFile(std::string_view filename)
