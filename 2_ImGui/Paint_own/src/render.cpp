@@ -137,6 +137,17 @@ void WindowClass::DrawCanvas()
                                 canvasPos.y + border_thicknes + point.y);
         draw_list->AddCircleFilled(pos, size, color);
     }
+
+    const auto border_min = canvasPos;
+    const auto border_max =
+        ImVec2(canvasPos.x + button_size.x - border_thicknes,
+               canvasPos.y + button_size.y - border_thicknes);
+    draw_list->AddRect(border_min,
+                       border_max,
+                       IM_COL32(255, 255, 255, 255),
+                       0.0F,
+                       ImDrawCornerFlags_All,
+                       border_thicknes);
 }
 
 void WindowClass::DrawColorButtons()
