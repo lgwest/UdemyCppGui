@@ -136,6 +136,9 @@ void WindowClass::DrawCalendar()
     const auto original_font_size = ImGui::GetFontSize();
     ImGui::SetWindowFontScale(calendarFontSize);
 
+    const auto curr_time = std::chrono::floor<std::chrono::days>(std::chrono::system_clock::now());
+    const auto todays_date = std::chrono::year_month_day(curr_time);
+
     const auto y = selectedYear;
     for (std::int32_t m = 1; m <= 12; ++m)
     {
@@ -144,15 +147,31 @@ void WindowClass::DrawCalendar()
 
         for (std::int32_t d = 1; d <= 31; ++d)
         {
-            const auto curr_date = 
+            const auto iteration_date = 
                 std::chrono::year_month_day(std::chrono::year(y),
                                             std::chrono::month(m),
                                             std::chrono::day(d));
-            if (!curr_date.ok())
+            if (!iteration_date.ok())
                 break;
             
             ImGui::SameLine();
-            ImGui::Text("%d", d);
+
+            if (iteration_date == todays_date)
+            {
+                ImGui::TextColored(ImVec4(0.0F, 1.0F, 0.0F, 1.0F), "%d", d);
+            }
+            else if (iteration_date == selectedDate)
+            {
+                ImGui::TextColored(ImVec4(0.0F, 0.0F, 1.0F, 1.0F), "%d", d);
+            }
+            else if (meetings.contains(iteration_date))
+            {
+                ImGui::TextColored(ImVec4(1.0F, 0.0F, 0.0F, 1.0F), "%d", d);
+            }
+            else
+            {
+                ImGui::Text("%d", d);
+            }
         }
     }
     ImGui::SetWindowFontScale(original_font_size);
