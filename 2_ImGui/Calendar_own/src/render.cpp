@@ -130,6 +130,12 @@ void WindowClass::DrawDateCombo()
 
 void WindowClass::DrawCalendar()
 {
+    const auto child_size = ImVec2(ImGui::GetContentRegionAvail().x, 400.0);
+    ImGui::BeginChild("###calendar", child_size, false);
+
+    const auto original_font_size = ImGui::GetFontSize();
+    ImGui::SetWindowFontScale(calendarFontSize);
+
     const auto y = selectedYear;
     for (std::int32_t m = 1; m <= 12; ++m)
     {
@@ -149,6 +155,9 @@ void WindowClass::DrawCalendar()
             ImGui::Text("%d", d);
         }
     }
+    ImGui::SetWindowFontScale(original_font_size);
+    
+    ImGui::EndChild();
 }
 
 void WindowClass::DrawAddMeetingWindow()
