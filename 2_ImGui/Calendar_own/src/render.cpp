@@ -172,6 +172,11 @@ void WindowClass::DrawCalendar()
             {
                 ImGui::Text("%d", d);
             }
+            if (ImGui::IsItemClicked())
+            {
+                selectedDate = iteration_date;
+                UpdateSelectedDateVariables();
+            }
         }
     }
     ImGui::SetWindowFontScale(original_font_size);
@@ -197,6 +202,9 @@ void WindowClass::SaveMeetingsToFile(std::string_view filename)
 
 void WindowClass::UpdateSelectedDateVariables()
 {
+    selectedDay = static_cast<int>(selectedDate.day().operator unsigned int());
+    selectedMonth = static_cast<int>(selectedDate.month().operator unsigned int());
+    selectedYear = static_cast<int>(selectedDate.year());
 }
 
 void WindowClass::Meeting::Serialize(std::ofstream &out)
