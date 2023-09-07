@@ -130,6 +130,25 @@ void WindowClass::DrawDateCombo()
 
 void WindowClass::DrawCalendar()
 {
+    const auto y = selectedYear;
+    for (std::int32_t m = 1; m <= 12; ++m)
+    {
+        ImGui::Text("%s", fmt::format("{:.3}", monthNames[m - 1]).data());
+        ImGui::SameLine();
+
+        for (std::int32_t d = 1; d <= 31; ++d)
+        {
+            const auto curr_date = 
+                std::chrono::year_month_day(std::chrono::year(y),
+                                            std::chrono::month(m),
+                                            std::chrono::day(d));
+            if (!curr_date.ok())
+                break;
+            
+            ImGui::SameLine();
+            ImGui::Text("%d", d);
+        }
+    }
 }
 
 void WindowClass::DrawAddMeetingWindow()
