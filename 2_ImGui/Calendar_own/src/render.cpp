@@ -186,6 +186,30 @@ void WindowClass::DrawCalendar()
 
 void WindowClass::DrawAddMeetingWindow()
 {
+    static char meeting_name_buffer[128] = "...";
+
+    ImGui::SetNextWindowSize(meetingWindowSize);
+    ImGui::SetNextWindowPos(meetingWindowPos);
+   
+    ImGui::Begin("###addMeeting", &addMeetingWindowOpen, meetingWindowFlags);
+    ImGui::Text("Add meeting to %d.%s.%d", selectedDay, monthNames[selectedMonth - 1].data(), selectedYear);
+    ImGui::InputText("Meeting Name", meeting_name_buffer, sizeof(meeting_name_buffer));
+
+    if (ImGui::Button("Save"))
+    {
+        meetings[selectedDate].push_back(Meeting{meeting_name_buffer});
+        std::memset(meeting_name_buffer, 0, sizeof(meeting_name_buffer));
+        addMeetingWindowOpen = false;
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Cancel"))
+    {
+        addMeetingWindowOpen = false;
+    }
+
+    ImGui::End();
 }
 
 void WindowClass::DrawMeetingList()
