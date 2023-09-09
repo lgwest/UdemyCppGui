@@ -214,6 +214,30 @@ void WindowClass::DrawAddMeetingWindow()
 
 void WindowClass::DrawMeetingList()
 {
+    if (meetings.size() == 0)
+    {
+        ImGui::Text("No meetings at all.");
+        return;
+    }
+
+    ImGui::Text("Meetings on %d-%s-%d: ", selectedDay, monthNames[selectedMonth - 1].data(), selectedYear);
+
+    if (meetings[selectedDate].empty())
+    {
+        ImGui::Text("no meetings this day: %d-%s-%d", selectedDay, monthNames[selectedMonth -1].data(), selectedYear);
+        return;
+    }
+
+    for (auto const& meeting: meetings[selectedDate])
+    {
+        ImGui::BulletText("%s", meeting.name.data());
+
+        if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+        {
+            std::erase(meetings[selectedDate], meeting);
+            return;
+        }
+    }
 }
 
 void WindowClass::LoadMeetingsFromFile(std::string_view filename)
