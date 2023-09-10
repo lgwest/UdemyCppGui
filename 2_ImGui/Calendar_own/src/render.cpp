@@ -223,6 +223,12 @@ void WindowClass::DrawMeetingList()
 
     ImGui::Text("Meetings on %d-%s-%d: ", selectedDay, monthNames[selectedMonth - 1].data(), selectedYear);
 
+    if (!meetings.contains(selectedDate))
+    {
+        ImGui::Text("No meetings for this day.");
+        return;
+    }
+
     if (meetings[selectedDate].empty())
     {
         ImGui::Text("no meetings this day: %d-%s-%d", selectedDay, monthNames[selectedMonth -1].data(), selectedYear);
@@ -236,6 +242,10 @@ void WindowClass::DrawMeetingList()
         if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
         {
             std::erase(meetings[selectedDate], meeting);
+            if (meetings[selectedDate].size() == 0)
+            {
+                meetings.erase(selectedDate); // pop the key from the map if date empty
+            }
             return;
         }
     }
@@ -277,8 +287,6 @@ void WindowClass::SaveMeetingsToFile(std::string_view filename)
         return;
 
     const auto num_meetings = meetings.size();
-    auto x = reinterpret_cast<const char *>(&num_meetings);
-    auto n = sizeof(num_meetings);
     out.write(reinterpret_cast<const char *>(&num_meetings),
               sizeof(num_meetings));
 
