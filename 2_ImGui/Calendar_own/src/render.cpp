@@ -7,6 +7,7 @@
 #include <string_view>
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 #include <fmt/format.h>
 #include <imgui.h>
@@ -242,11 +243,59 @@ void WindowClass::DrawMeetingList()
 
 void WindowClass::LoadMeetingsFromFile(std::string_view filename)
 {
+    auto in = std::ifstream(filename.data(), std::ios::binary);
+
+    if (!in || !in.is_open())
+        return;
+
+    auto num_meetings = std::size_t{0};
+    in.read(reinterpret_cast<char *>(&num_meetings), sizeof(num_meetings));
+
+    for (std::size_t i = 0; i < num_meetings; ++i)
+    {
+        auto date = std::chrono::year_month_day{};
+        in.read(reinterpret_cast<char *>(&date), sizeof(date));
+
+        auto num_meetings_on_that_date = std::size_t{0};
+        in.read(reinterpret_cast<char *>(&num_meetings_on_that_date), sizeof(num_meetings_on_that_date));
+        
+        for (size_t j = 0; j < num_meetings_on_that_date; ++j)
+        {
+            auto meeting = Meeting::Deserialize(in);
+            meetings[date].push_back(meeting);
+        }
+    }
+
+    in.close();
 }
 
 void WindowClass::SaveMeetingsToFile(std::string_view filename)
 {
-}
+    auto out = std::ofstream(filename.data(), std::ios::binary);
+
+    if (!out || !out.is_open())
+        return;
+
+    const auto num_meetings = meetings.size();
+    auto x = reinterpret_cast<const char *>(&num_meetings);
+    auto n = sizeof(num_meetings);
+    out.write(reinterpret_cast<const char *>(&num_meetings),
+              sizeof(num_meetings));
+
+    for (const auto &[date, meeting_vec] : meetings)
+    {
+        out.write(reinterpret_cast<const char *>(&date), sizeof(date));
+
+        const auto meetings_count_on_that_date = meeting_vec.size();
+        out.write(reinterpret_cast<const char *>(&meetings_count_on_that_date), sizeof(meetings_count_on_that_date));
+
+        for (auto const& meeting : meeting_vec)
+        {
+            meeting.Serialize(out);
+        }
+    }
+
+    out.close();}
 
 void WindowClass::UpdateSelectedDateVariables()
 {
@@ -255,14 +304,24 @@ void WindowClass::UpdateSelectedDateVariables()
     selectedYear = static_cast<int>(selectedDate.year());
 }
 
-void WindowClass::Meeting::Serialize(std::ofstream &out)
+void WindowClass::Meeting::Serialize(std::ofstream &out) const
 {
-}
+    const auto name_length = name.size();
+    out.write(reinterpret_cast<const char *>(&name_length), sizeof(name_length));
+    out.write(name.data(), static_cast<std::streamsize>(name.size()));
+};
 
 WindowClass::Meeting WindowClass::Meeting::Deserialize(std::ifstream &in)
 {
-    WindowClass::Meeting m{};
-    return m;
+    auto meeting = Meeting{};
+    auto name_length = std::size_t{0};
+
+    in.read(reinterpret_cast<char *>(&name_length), sizeof(name_length));
+    meeting.name.resize(name_length);
+
+    in.read(meeting.name.data(), static_cast<std::streamsize>(name_length));
+
+    return meeting;
 }
 
 void render(WindowClass &window_obj)

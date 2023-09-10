@@ -107,6 +107,7 @@ int main(int, char **)
     style.Colors[ImGuiCol_TableBorderLight] = ImVec4(1.0, 1.0, 1.0, 1.0);
 
     WindowClass window_obj;
+    window_obj.LoadMeetingsFromFile("meetings.bin");
 
     while (!glfwWindowShouldClose(window))
     {
@@ -125,6 +126,8 @@ int main(int, char **)
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+
+    window_obj.SaveMeetingsToFile("meetings.bin");
 
     glfwDestroyWindow(window);
     glfwTerminate();

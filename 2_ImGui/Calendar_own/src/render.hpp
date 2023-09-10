@@ -33,8 +33,8 @@ public:
     {
         std::string name;
 
-        void Serialize(std::ofstream &out);
-        Meeting Deserialize(std::ifstream &out);
+        void Serialize(std::ofstream &out) const;
+        static Meeting Deserialize(std::ifstream &in);
 
         constexpr bool operator==(Meeting const& rhs) const
         {
@@ -57,6 +57,8 @@ public:
     WindowClass() : meetings{}{};
 
     void Draw(std::string_view label);
+    void LoadMeetingsFromFile(std::string_view filename);
+    void SaveMeetingsToFile(std::string_view filename);
 
 private: 
     void DrawDateCombo();
@@ -64,8 +66,6 @@ private:
     void DrawAddMeetingWindow();
     void DrawMeetingList();
 
-    void LoadMeetingsFromFile(std::string_view filename);
-    void SaveMeetingsToFile(std::string_view filename);
     void UpdateSelectedDateVariables();
 
 private:
