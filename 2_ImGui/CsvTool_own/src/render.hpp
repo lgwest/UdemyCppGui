@@ -16,6 +16,9 @@ public:
     static constexpr auto popUpPos = ImVec2(1280.0F / 2.0F - popUpSize.x / 2.0F,
                                             720.0F / 2.0F - popUpSize.y / 2.0F);
 
+    static constexpr auto maxNumRows = 30;
+    static constexpr auto maxNumCols = 8;
+
 public:
     WindowClass(): numCols(0), numRows(0), data({}), filenameBuffer("test.csv") {};
     void Draw(std::string_view label);
