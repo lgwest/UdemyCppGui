@@ -1,4 +1,9 @@
+#include <cstdint>
 #include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <sstream>
 
 #include <fmt/format.h>
 #include <imgui.h>
@@ -126,10 +131,35 @@ void WindowClass::DrawSizeButtons()
 
 void WindowClass::DrawIoButtons()
 {
+    if (ImGui::Button("Save")) 
+    {
+        ImGui::OpenPopup("Save File");
+    }
+    
+    ImGui::SameLine();
+
+    if (ImGui::Button("Load"))
+    {
+        ImGui::OpenPopup("Load File");
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Clear"))
+    {
+        data.clear();
+        numRows = 0;
+        numCols = 0;
+    }
+
+    DrawSavePopup();
+    DrawLoadPopup();
+
 }
 
 void WindowClass::DrawTable()
 {
+    
 }
 
 void WindowClass::DrawSavePopup()
@@ -213,10 +243,63 @@ void WindowClass::DrawValuePopup(const int row, const int col)
 
 void WindowClass::SaveToCsvFile(std::string_view filename)
 {
+    auto out = std::ofstream{filename.data()};
+
+    if (!out || !out.is_open())
+        return;
+
+    for (std::int32_t row = 0; row < numRows; ++row)
+    {
+        for (std::int32_t col = 0; col < numCols; ++col)
+        {
+            out << data[row][col];
+            out << ',';
+        }
+        out << '\n';
+    }
+
+    out.close();
 }
 
 void WindowClass::LoadFromCsvFile(std::string_view filename)
 {
+    auto in = std::ifstream{filename.data()};
+
+    if (!in || !in.is_open())
+        return;
+
+    data.clear();
+
+    auto line = std::string{};
+    auto num_rows = 0U;
+
+    while(std::getline(in, line))
+    {
+        auto ss = std::istringstream(line);
+        auto row = std::vector<float>{};
+        auto value = std::string{};
+
+        while (std::getline(ss, value, ','))
+        {
+            row.push_back(std::stof(value));
+        }
+
+        data.push_back(row);
+
+        ++num_rows;
+    }
+
+    in.close();
+
+    numRows = num_rows;
+    if (numRows > 0)
+    {
+        numCols = static_cast<std::int32_t>(data[0].size());
+    }
+    else
+    {
+        numCols = 0;
+    }
 }
 
 void WindowClass::SetPopupLayout()
