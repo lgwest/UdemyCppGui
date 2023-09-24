@@ -115,8 +115,6 @@ void WindowClass::DrawSizeButtons()
     }
     else if (user_dropped_cols)
     {
-        for (auto row = num_rows_i32; row > numRows; --row) // TODO remove
-        {
         for (int32_t row = 0; row < numRows; ++row)
         {
             const auto num_cols_i32 = static_cast<int32_t>(data[row].size());
@@ -124,7 +122,6 @@ void WindowClass::DrawSizeButtons()
             {
                 data[row].pop_back();
             }
-        }        
         }        
     }
 }
