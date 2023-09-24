@@ -5,7 +5,7 @@
 #include <numbers>
 #include <tuple>
 
-class ClockClass
+class Clock
 {
 private:
     static constexpr auto PI = std::numbers::pi_v<float>;
@@ -19,7 +19,7 @@ private:
     static constexpr auto minsStrokesLength = 0.95F;
 
 public:
-    ClockClass() : secs(0), mins(0), hrs(0), center({}){};
+    Clock() : secs(0), mins(0), hrs(0), center({}){};
     void Draw(std::string_view label);
 
 private:
@@ -41,4 +41,4 @@ private:
     ImVec2 center;
 };
 
-void render(ClockClass &window_obj);
+void render(Clock &window_obj);

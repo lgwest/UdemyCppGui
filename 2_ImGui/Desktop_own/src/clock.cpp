@@ -9,7 +9,7 @@
 
 #include "clock.hpp"
 
-void ClockClass::Draw(std::string_view label)
+void Clock::Draw(std::string_view label)
 {
     constexpr static auto window_flags =
         ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
@@ -44,12 +44,12 @@ void ClockClass::Draw(std::string_view label)
     ImGui::End();
 }
 
-void ClockClass::DrawCircle(const float radius)
+void Clock::DrawCircle(const float radius)
 {
     ImGui::GetWindowDrawList()->AddCircle(center, radius, ImGui::GetColorU32(ImGuiCol_Text), 100, 2.0F);
 }
 
-void ClockClass::DrawClockHand(const float radius,
+void Clock::DrawClockHand(const float radius,
                                 const float theta,
                                 const ImColor color)
 {
@@ -60,7 +60,7 @@ void ClockClass::DrawClockHand(const float radius,
     ImGui::GetWindowDrawList()->AddLine(center, end_point, color, 3.0F );
 }
 
-void ClockClass::DrawAllHourStrokes()
+void Clock::DrawAllHourStrokes()
 {
     for (uint32_t hr = 0; hr < 12; ++hr)
     {
@@ -75,7 +75,7 @@ void ClockClass::DrawAllHourStrokes()
     }
 }
 
-void ClockClass::DrawAllMinuteStrokes()
+void Clock::DrawAllMinuteStrokes()
 {
     for (uint32_t mins = 0; mins < 60; ++mins)
     {
@@ -89,12 +89,12 @@ void ClockClass::DrawAllMinuteStrokes()
         ImGui::GetWindowDrawList()->AddLine(start_point, end_point, ImGui::GetColorU32(ImGuiCol_Text), 1.0F);
     }}
 
-void ClockClass::DrawDigitalClock()
+void Clock::DrawDigitalClock()
 {
     ImGui::Text("%02d:%02d:%02d", hrs, mins, secs);
 }
 
-void ClockClass::GetTime()
+void Clock::GetTime()
 {
     const auto timestamp_now = std::chrono::system_clock::now();
     const auto time_now = std::chrono::system_clock::to_time_t(timestamp_now);
@@ -105,7 +105,7 @@ void ClockClass::GetTime()
     hrs = time_struct->tm_hour;
 }
 
-std::tuple<float, float, float> ClockClass::GetTheta()
+std::tuple<float, float, float> Clock::GetTheta()
 {
     const auto seconds_frac = static_cast<float>(secs);
     const auto minutes_frac = static_cast<float>(mins) + seconds_frac / 60.0F;
@@ -118,7 +118,7 @@ std::tuple<float, float, float> ClockClass::GetTheta()
     return std::make_tuple(hour_theta, minute_theta, second_theta);
 }
 
-void render(ClockClass &window_obj)
+void render(Clock &window_obj)
 {
     window_obj.Draw("WallClock[own]");
 }
