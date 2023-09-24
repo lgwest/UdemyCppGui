@@ -15,8 +15,8 @@ private:
     static constexpr auto hrsClockHandLength = 0.95F;
     static constexpr auto minsClockHandLength = 0.85F;
     static constexpr auto secsClockHandLength = 0.75F;
-    static constexpr auto hrsStrockesLength = 0.90F;
-    static constexpr auto minsStrockesLength = 0.95F;
+    static constexpr auto hrsStrokesLength = 0.90F;
+    static constexpr auto minsStrokesLength = 0.95F;
 
 public:
     WindowClass() : secs(0), mins(0), hrs(0), center({}){};
@@ -24,7 +24,7 @@ public:
 
 private:
     void DrawCircle(const float radius);
-    void DrawClockHand(const float radius, const float theta, const ImColor col);
+    void DrawClockHand(const float radius, const float theta, const ImColor color);
     void DrawAllHourStrokes();
     void DrawAllMinuteStrokes();
     void DrawDigitalClock();
