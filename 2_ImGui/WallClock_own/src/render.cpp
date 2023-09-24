@@ -91,7 +91,7 @@ void WindowClass::DrawAllMinuteStrokes()
 
 void WindowClass::DrawDigitalClock()
 {
-    ImGui::Text("%d:%d:%d", hrs, mins, secs);
+    ImGui::Text("%02d:%02d:%02d", hrs, mins, secs);
 }
 
 void WindowClass::GetTime()
@@ -109,7 +109,7 @@ std::tuple<float, float, float> WindowClass::GetTheta()
 {
     const auto seconds_frac = static_cast<float>(secs);
     const auto minutes_frac = static_cast<float>(mins) + seconds_frac / 60.0F;
-    const auto hours_frac = static_cast<float>(secs) + minutes_frac / 60.0F;
+    const auto hours_frac = static_cast<float>(hrs) + minutes_frac / 60.0F;
 
     const auto hour_theta = (hours_frac * ((2.0F * PI) / 12.0F)) + offset;
     const auto minute_theta = (minutes_frac * ((2.0F * PI) / 60.0F)) + offset;
