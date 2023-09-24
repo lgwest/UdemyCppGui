@@ -22,6 +22,22 @@ void WindowClass::Draw(std::string_view label)
     ImGui::End();
 }
 
+void WindowClass::DrawDesktop()
+{
+}
+
+void WindowClass::DrawTaskbar()
+{
+}
+
+void WindowClass::ShowIconList(bool *open)
+{
+}
+
+void WindowClass::Icon::Draw()
+{
+}
+
 void render(WindowClass &window_obj)
 {
     window_obj.Draw("Desktop[own]");

@@ -31,7 +31,6 @@ private:
     void DrawAllMinuteStrokes();
     void DrawDigitalClock();
 
-    void GetTime();
     std::tuple<float, float, float> GetTheta();
 
 public:
