@@ -50,7 +50,7 @@ void WindowClass::DrawSizeButtons()
         user_added_rows = slider_value_rows > numRows ? true : false;
         user_dropped_rows = !user_added_rows;
 
-        numRows = user_added_rows;
+        numRows = slider_value_rows;
     }
     ImGui::SameLine();
     if (ImGui::Button("Add Row") && numRows < maxNumRows) 
@@ -72,7 +72,7 @@ void WindowClass::DrawSizeButtons()
         user_added_cols = slider_value_cols > numCols ? true : false;
         user_dropped_cols = !user_added_cols;
 
-        numRows = user_added_cols;
+        numCols = slider_value_cols;
     }
     ImGui::SameLine();
     if (ImGui::Button("Add Col") && numCols < maxNumCols) 
@@ -115,7 +115,7 @@ void WindowClass::DrawSizeButtons()
     }
     else if (user_dropped_cols)
     {
-        for (auto row = num_rows_i32; row > numRows; --row)
+        for (auto row = num_rows_i32; row > numRows; --row) // TODO remove
         {
         for (int32_t row = 0; row < numRows; ++row)
         {
@@ -159,7 +159,51 @@ void WindowClass::DrawIoButtons()
 
 void WindowClass::DrawTable()
 {
+    constexpr static auto table_flags = ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuter;
+
+    static auto row_clicked = 0;
+    static auto col_clicked = 0;
+
+    if (numCols == 0)
+        return;
     
+    ImGui::BeginTable("Table", numCols, table_flags);
+
+    for (std::int32_t col = 0; col < numCols; ++col)
+    {
+        const auto col_name = fmt::format("{}", 'A' + col);
+        ImGui::TableSetupColumn(col_name.data(), 
+                                ImGuiTableColumnFlags_WidthFixed,
+                                1280.0F / static_cast<float>(numCols));
+    }
+
+    ImGui::TableNextRow(ImGuiTableRowFlags_Headers);
+    for (std::int32_t col = 0; col < numCols; ++col)
+    PlotCellValue("%c", 'A' + col);
+
+    for (std::int32_t row = 0; row < numRows; ++row)
+    {
+        for (std::int32_t col = 0; col < numCols; ++col)
+        {
+            PlotCellValue("%f", data[row][col]);
+            if (ImGui::IsItemClicked())
+            {
+                ImGui::OpenPopup("Change Value");
+                row_clicked = row;
+                col_clicked = col;
+            }
+            else if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Cell: (%d, %d)", row, col);
+            }
+        }
+        ImGui::TableNextRow();
+    }
+    
+    DrawValuePopup(row_clicked, col_clicked);
+
+    ImGui::EndTable();
+
 }
 
 void WindowClass::DrawSavePopup()
@@ -216,17 +260,20 @@ void WindowClass::DrawLoadPopup()
 
 void WindowClass::DrawValuePopup(const int row, const int col)
 {
+    static char buffer[64] = {'\0'};
+
     SetPopupLayout();
     const auto esc_pressed = ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Escape));
 
     SetPopupLayout();
-    if (ImGui::BeginPopupModal("Save File", nullptr, popUpFlags))
+    if (ImGui::BeginPopupModal("Change Value", nullptr, popUpFlags))
     {
-        ImGui::InputText("Filename", filenameBuffer, sizeof(filenameBuffer));
+        const auto label = fmt::format("##{}_{}", row, col);
+        ImGui::InputText(label.data(), buffer, sizeof(buffer));
 
         if (ImGui::Button("Save", popUpButtonSize))
         {
-            SaveToCsvFile(filenameBuffer);
+            data[row][col] = std::stof(buffer);
             ImGui::CloseCurrentPopup();
         }
 
@@ -300,6 +347,14 @@ void WindowClass::LoadFromCsvFile(std::string_view filename)
     {
         numCols = 0;
     }
+}
+
+template <typename T>
+inline void WindowClass::PlotCellValue(std::string_view formatter,
+                                       const T value)
+{
+    ImGui::TableNextColumn();
+    ImGui::Text(formatter.data(), value);
 }
 
 void WindowClass::SetPopupLayout()

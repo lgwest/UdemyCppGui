@@ -50,8 +50,4 @@ private:
 
 void render(WindowClass &window_obj);
 
-template <typename T>
-inline void WindowClass::PlotCellValue(std::string_view formatter,
-                                       const T value)
-{
-}
+
