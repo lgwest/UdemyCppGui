@@ -91,6 +91,7 @@ void WindowClass::DrawAllMinuteStrokes()
 
 void WindowClass::DrawDigitalClock()
 {
+    ImGui::Text("%d:%d:%d", hrs, mins, secs);
 }
 
 void WindowClass::GetTime()
