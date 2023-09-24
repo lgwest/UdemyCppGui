@@ -19,7 +19,57 @@ void WindowClass::Draw(std::string_view label)
 
     ImGui::Begin(label.data(), nullptr, window_flags);
 
+    const auto cursor_pos = ImGui::GetCursorScreenPos();
+    center = ImVec2(cursor_pos.x + circleRadius, cursor_pos.y + circleRadius);
+
+    DrawCircle(circleRadius);
+
+    GetTime();
+    const auto [hour_theta, minute_theta, second_theta] = GetTheta();
+
+    DrawClockHand(circleRadius * hrsClockHandLength, hour_theta, ImColor(1.0F, 0.0F, 0.0F, 1.0F));
+    DrawClockHand(circleRadius * minsClockHandLength, minute_theta, ImColor(0.0F, 1.0F, 0.0F, 1.0F));
+    DrawClockHand(circleRadius * secsClockHandLength, second_theta, ImColor(0.0F, 0.0F, 1.0F, 1.0F));
+
+    DrawAllHourStrokes();
+    DrawAllMinuteStrokes();
+
+    DrawCircle(innerRadius);
+
+    DrawDigitalClock();
+
     ImGui::End();
+}
+
+void WindowClass::DrawCircle(const float radius)
+{
+}
+
+void WindowClass::DrawClockHand(const float radius,
+                                const float theta,
+                                const ImColor col)
+{
+}
+
+void WindowClass::DrawAllHourStrokes()
+{
+}
+
+void WindowClass::DrawAllMinuteStrokes()
+{
+}
+
+void WindowClass::DrawDigitalClock()
+{
+}
+
+void WindowClass::GetTime()
+{
+}
+
+std::tuple<float, float, float> WindowClass::GetTheta()
+{
+    return std::tuple<float, float, float>();
 }
 
 void render(WindowClass &window_obj)
