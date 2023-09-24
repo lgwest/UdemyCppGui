@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 
 project(
-    "ImGuiHelloWorld"
+    "Desktop_own"
     VERSION 1.0.0
     LANGUAGES C CXX)
 
@@ -37,6 +37,7 @@ find_package(OpenGL REQUIRED)
 add_executable(${PROJECT_NAME}
     src/main.cpp
     src/render.cpp
+    src/clock.cpp
 )
 
 add_compile_definitions(NOMINMAX)

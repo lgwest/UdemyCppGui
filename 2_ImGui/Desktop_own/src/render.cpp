@@ -24,5 +24,5 @@ void WindowClass::Draw(std::string_view label)
 
 void render(WindowClass &window_obj)
 {
-    window_obj.Draw("Label");
+    window_obj.Draw("Desktop[own]");
 }
