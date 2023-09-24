@@ -21,6 +21,8 @@ private:
 public:
     Clock() : secs(0), mins(0), hrs(0), center({}){};
     void Draw(std::string_view label);
+    
+    void GetTime();
 
 private:
     void DrawCircle(const float radius);
