@@ -4,6 +4,7 @@
 #include <string_view>
 #include <string>
 #include <vector>
+#include <fmt/format.h>
 
 #include "clock.hpp"
 
@@ -28,6 +29,15 @@ public:
     };
 
 public:
+    WindowClass() : icons({}), clock({})
+    {
+        icons.reserve(numIcons);
+        for(uint32_t i = 0; i < numIcons; ++i) 
+        {
+            icons.push_back(Icon{fmt::format("Icon{}", i)});
+        }
+    };
+
     void Draw(std::string_view label);
 
 private:
@@ -37,6 +47,8 @@ private:
     void ShowIconList(bool *open = nullptr);
 
 private:
+    std::vector<Icon> icons;
+
     Clock clock;
 };
 

@@ -19,11 +19,18 @@ void WindowClass::Draw(std::string_view label)
 
     ImGui::Begin(label.data(), nullptr, window_flags);
 
+    DrawDesktop();
+    DrawTaskbar();
+
     ImGui::End();
 }
 
 void WindowClass::DrawDesktop()
 {
+    for (auto &icon : icons)
+    {
+        icon.Draw();
+    }
 }
 
 void WindowClass::DrawTaskbar()
