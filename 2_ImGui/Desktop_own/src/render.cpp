@@ -81,10 +81,39 @@ void WindowClass::DrawTaskbar()
 
 void WindowClass::ShowIconList(bool *open)
 {
+    const auto selectable_height = ImGui::GetTextLineHeightWithSpacing();
+    const auto popup_height = selectable_height *numIcons + 40.0F;
+
+    ImGui::SetNextWindowSize(ImVec2(0.0F, 680.0F - popup_height), ImGuiCond_Always);
+    ImGui::SetNextWindowPos(ImVec2(100.0F, popup_height), ImGuiCond_Always);
+
+    if (ImGui::BeginPopupModal("My Programs", open, ImGuiWindowFlags_NoResize))
+    {
+        for (auto &icon : icons)
+        {
+            if (ImGui::Selectable(icon.label.data()))
+            {
+                icon.popupOpen = true;
+                ImGui::CloseCurrentPopup();
+            }
+        }
+
+        ImGui::EndPopup();
+    }
 }
 
 void WindowClass::Icon::Draw()
 {
+    const auto label_icon_window = fmt::format("IconWindow##{}", label);
+
+    //ImGui::SetNextWindowSize()
+    //ImGui::SetNextWindowPos()
+
+    ImGui::Begin(label_icon_window.data(), nullptr);
+
+    ImGui::Text("Something");
+
+    ImGui::End();
 }
 
 void render(WindowClass &window_obj)
