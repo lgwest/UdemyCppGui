@@ -65,7 +65,7 @@ void WindowClass::DrawTaskbar()
 
     static auto clock_open = false;
     clock.GetTime();
-    const auto time = fmt::format("{}:{}", clock.hrs, clock.mins);
+    const auto time = fmt::format("{:02}:{:02}", clock.hrs, clock.mins);
     if (ImGui::Button(time.data(),ImVec2(100.0F, 30.0F)) || clock_open)
     {
         clock.Draw("clockWindow");
@@ -84,8 +84,8 @@ void WindowClass::ShowIconList(bool *open)
     const auto selectable_height = ImGui::GetTextLineHeightWithSpacing();
     const auto popup_height = selectable_height *numIcons + 40.0F;
 
-    ImGui::SetNextWindowSize(ImVec2(0.0F, 680.0F - popup_height), ImGuiCond_Always);
-    ImGui::SetNextWindowPos(ImVec2(100.0F, popup_height), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(100.0F, popup_height), ImGuiCond_Always);
+    ImGui::SetNextWindowPos(ImVec2(0.0F, 680.0F - popup_height), ImGuiCond_Always);
 
     if (ImGui::BeginPopupModal("My Programs", open, ImGuiWindowFlags_NoResize))
     {
@@ -104,14 +104,45 @@ void WindowClass::ShowIconList(bool *open)
 
 void WindowClass::Icon::Draw()
 {
+    constexpr static auto icon_window_flags =
+        ImGuiWindowFlags_NoResize 
+        | ImGuiWindowFlags_NoCollapse
+        | ImGuiWindowFlags_NoScrollbar;
+
+    constexpr static auto button_size = ImVec2(100.0F, 50.0F);
     const auto label_icon_window = fmt::format("IconWindow##{}", label);
+    const auto label_icon_popup = fmt::format("IconPopup##{}", label);
 
-    //ImGui::SetNextWindowSize()
-    //ImGui::SetNextWindowPos()
+    ImGui::SetNextWindowSize(ImVec2(button_size.x + 35.0F, button_size.y + 75.0F), 
+            ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(position, ImGuiCond_FirstUseEver);
 
-    ImGui::Begin(label_icon_window.data(), nullptr);
+    ImGui::Begin(label_icon_window.data(), nullptr, icon_window_flags);
 
-    ImGui::Text("Something");
+    if (ImGui::Button(label.data(), button_size))
+    {
+        ++clickCount;
+    }
+
+    if (clickCount >= 1 || popupOpen)
+    {
+        ImGui::OpenPopup(label_icon_popup.data());
+        clickCount = 0;
+        popupOpen = true;
+    }
+
+    if (ImGui::BeginPopupModal(label_icon_popup.data(), &popupOpen))
+    {
+        ImGui::Text("Hi");
+
+        if (ImGui::Button("Close"))
+        {
+            popupOpen = false;
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
 
     ImGui::End();
 }
