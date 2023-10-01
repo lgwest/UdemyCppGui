@@ -1,4 +1,4 @@
-#include <iostream>
+#include <string_view>
 
 #include <fmt/format.h>
 #include <imgui.h>
@@ -10,7 +10,8 @@ void WindowClass::Draw(std::string_view label)
 {
     constexpr static auto window_flags =
         ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar |
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs;
     constexpr static auto window_size = ImVec2(1280.0F, 720.0F);
     constexpr static auto window_pos = ImVec2(0.0F, 0.0F);
 
@@ -49,7 +50,7 @@ void WindowClass::DrawTaskbar()
 
     ImGui::Begin("Taskbar", nullptr, taskbar_flags);
 
-    if (ImGui::Button("All Icons"))
+    if (ImGui::Button("All Icons", ImVec2(100, 30)))
     {
         ImGui::OpenPopup("My Programs");
         open_taskbar = true;
@@ -57,7 +58,7 @@ void WindowClass::DrawTaskbar()
 
     if (open_taskbar)
     {
-        ShowIconList();
+        ShowIconList(&open_taskbar);
     }
     ImGui::SameLine();
 
@@ -66,7 +67,7 @@ void WindowClass::DrawTaskbar()
     static auto clock_open = false;
     clock.GetTime();
     const auto time = fmt::format("{:02}:{:02}", clock.hrs, clock.mins);
-    if (ImGui::Button(time.data(),ImVec2(100.0F, 30.0F)) || clock_open)
+    if (ImGui::Button(time.data(), ImVec2(100.0F, 30.0F)) || clock_open)
     {
         clock.Draw("clockWindow");
         clock_open = true;
@@ -82,7 +83,7 @@ void WindowClass::DrawTaskbar()
 void WindowClass::ShowIconList(bool *open)
 {
     const auto selectable_height = ImGui::GetTextLineHeightWithSpacing();
-    const auto popup_height = selectable_height *numIcons + 40.0F;
+    const auto popup_height = selectable_height * numIcons + 40.0F;
 
     ImGui::SetNextWindowSize(ImVec2(100.0F, popup_height), ImGuiCond_Always);
     ImGui::SetNextWindowPos(ImVec2(0.0F, 680.0F - popup_height), ImGuiCond_Always);
@@ -113,8 +114,8 @@ void WindowClass::Icon::Draw()
     const auto label_icon_window = fmt::format("IconWindow##{}", label);
     const auto label_icon_popup = fmt::format("IconPopup##{}", label);
 
-    ImGui::SetNextWindowSize(ImVec2(button_size.x + 35.0F, button_size.y + 75.0F), 
-            ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(button_size.x + 35.0F, button_size.y + 35.0F), 
+            ImGuiCond_Always);
     ImGui::SetNextWindowPos(position, ImGuiCond_FirstUseEver);
 
     ImGui::Begin(label_icon_window.data(), nullptr, icon_window_flags);
